@@ -96,8 +96,15 @@ class QueueCommand extends Command
      */
     protected function delete($items, $model)
     {
-        foreach($items->chunk($this->batching_size) as $models) {
-            $this->cloudSearcher->delete($models->pluck('entry_id'));
-        }
+        // Get the model's primary key
+        $instance = new $model;
+
+        // Create a full column name
+        $key = $instance->getTable() . '.' . $instance->getKeyName();
+
+        // Process all models
+        $model::whereIn($key, $items->pluck('entry_id'))->withTrashed()->chunk($this->batching_size, function($models) {
+            $this->cloudSearcher->update($models);
+        });
     }
 }
