@@ -64,7 +64,7 @@ class CloudSearcher
                 return $this->searchQueue()->push('update', $model->getKey(), get_class($model));
                 break;
             case 'delete':
-                return $this->searchQueue()->push('delete', $this->getSearchDocumentId($model), get_class($model));
+                return $this->searchQueue()->push('delete', $model->getKey(), get_class($model));
                 break;
         }
 
