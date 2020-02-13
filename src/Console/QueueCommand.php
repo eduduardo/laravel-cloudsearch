@@ -104,7 +104,7 @@ class QueueCommand extends Command
 
         // Process all models
         $model::whereIn($key, $items->pluck('entry_id'))->withTrashed()->chunk($this->batching_size, function($models) {
-            $this->cloudSearcher->update($models);
+            $this->cloudSearcher->delete($models);
         });
     }
 }
